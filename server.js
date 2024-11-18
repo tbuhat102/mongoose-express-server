@@ -90,18 +90,37 @@ app.get('/find/:database/:collection', async (req, res) => {
     }
 });
 app.post('/insert/:database/:collection', async (req, res) => {
-    try {
-        // Extract the request parameters using destructuring
-        // Get the request body and store it as data
-        // Get the appropriate Mongoose model
-        // Create a new instance of that model with the data
-        // Save the new document to the database
-        // Log a success message to the console
-        // Send back the newly created document as JSON with a 201 status code
-    } catch (err) {
-        // Log any errors to the console
-        // Send back a 400 status code and the error message in the response
-    }
+    app.post('/insert/:database/:collection', async (req, res) => {
+        try {
+            // Extract the request parameters using destructuring
+            const { database, collection } = req.params;
+    
+            // Get the request body and store it as data
+            const data = req.body;
+    
+            // Get the appropriate Mongoose model
+            const model = mongoose.model(collection, new mongoose.Schema({}, { strict: false }), collection);
+    
+            // Create a new instance of that model with the data
+            const newDocument = new model(data);
+    
+            // Save the new document to the database
+            await newDocument.save();
+    
+            // Log a success message to the console
+            console.log(`Document inserted into ${collection} collection of ${database} database.`);
+    
+            // Send back the newly created document as JSON with a 201 status code
+            res.status(201).json(newDocument);
+        } catch (err) {
+            // Log any errors to the console
+            console.error(err);
+    
+            // Send back a 400 status code and the error message in the response
+            res.status(400).json({ error: err.message });
+        }
+    });
+    
 });
 
 app.put('/update/:database/:collection/:id', async (req, res) => {
