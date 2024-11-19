@@ -99,22 +99,24 @@ app.post('/insert/:database/:collection', async (req, res) => {
             const data = req.body;
     
             // Get the appropriate Mongoose model
-            const model = mongoose.model(collection, new mongoose.Schema({}, { strict: false }), collection);
-    
+            const Model = await getModel(database, collection);    
             // Create a new instance of that model with the data
-            const newDocument = new model(data);
+            const newDocument = new Model(data);
     
             // Save the new document to the database
             await newDocument.save();
     
             // Log a success message to the console
-            console.log(`Document inserted into ${collection} collection of ${database} database.`);
+            console.log(`Document inserted successfully`);
     
             // Send back the newly created document as JSON with a 201 status code
-            res.status(201).json(newDocument);
+            res.status(201).json({
+                message: `Document: ${newDocument} saved successfully`, 
+                document: newDocument
+            });
         } catch (err) {
             // Log any errors to the console
-            console.error(err);
+            console.error("Something was wrong", err);
     
             // Send back a 400 status code and the error message in the response
             res.status(400).json({ error: err.message });
