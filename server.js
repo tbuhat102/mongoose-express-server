@@ -128,10 +128,17 @@ app.post('/insert/:database/:collection', async (req, res) => {
 app.put('/update/:database/:collection/:id', async (req, res) => {
     try {
         // Extract the database, collection, and id from request parameters
+        const {database, collection, id} = req.params;
         // Get the request body as data
+        const data = req.body;
         // Get the appropriate Mongoose model
+        const Model = await getModel(database, collection);
         // Find the document by id and update it
+        const updatedDocument = Model.findByIdandUpdate(id, );
         // If document was not found, early return with a 404 status and error message
+        if (!updatedDocument) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
         // Log a success message to the console
         // Send back the updated document with a 200 status code
     } catch (err) {
