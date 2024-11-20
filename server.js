@@ -166,7 +166,7 @@ app.delete('/delete/:database/:collection/:id', async (req, res) => {
         }
 
         // Log a success message to the console
-        console.log('Document deleted successfully:', deletedDocument);
+        console.log('Document deleted successfully', deletedDocument);
 
         // Send back a success message with a 200 status code
         res.status(200).json({ message: 'Document deleted successfully', document: deletedDocument });
